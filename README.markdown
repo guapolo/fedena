@@ -22,3 +22,37 @@ Visit  http://projectfedena.org/install for detailed installation instruction.
 #Community Support:
 
 Visit www.projectfedena.org for community support.
+
+#Tweaked for an OS X dev machine
+
+I tweaked the code a little in order to run it in an OS X 10.8.4 Mac. Merged the [code](http://projectfedena.org/download/fedena-bundle-linux) linked in [here](http://projectfedena.org/install) with the code from the original github repo.
+
+##Requirements
+  * [Homebrew](http://brew.sh/)
+  * [RVM](http://rvm.io) with [autolibs on](https://rvm.io/rvm/autolibs)
+  
+## Commands
+This guide assumes you cloned this repo into a `fedena` directory. `$` is the bash prompt.
+
+  ```bash
+    $ brew install mysql
+  ```
+  
+  Configure MySQL user according to *your* settings in the config/database.yml file.
+  
+  ```bash
+    $ rvm install 1.8.7
+    $ cd fedena/
+    $ rvm use 1.8.7@fedena --create --ruby-version
+    $ rvm rubygems 1.3.7
+    $ bundle install --local
+  ```
+
+  ```bash
+    $ rake db:create
+    $ rake fedena:plugins:install_all
+    $ chmod +x script/*
+    script/server
+  ```
+  
+  ;-)

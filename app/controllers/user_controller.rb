@@ -106,23 +106,21 @@ class UserController < ApplicationController
   def change_password
     
     if request.post?
-#      @user = current_user
-#      if User.authenticate?(@user.username, params[:user][:old_password])
-#        if params[:user][:new_password] == params[:user][:confirm_password]
-#          @user.password = params[:user][:new_password]
-#          @user.update_attributes(:password => @user.password,
-#            :role => @user.role_name
-#          )
-#          flash[:notice] = "#{t('flash9')}"
-#          redirect_to :action => 'dashboard'
-#        else
-#          flash[:warn_notice] = "<p>#{t('flash10')}</p>"
-#        end
-#      else
-#        flash[:warn_notice] = "<p>#{t('flash11')}</p>"
-#      end
-      flash[:notice] = "Password cannot be changed in demo version"
-
+      @user = current_user
+      if User.authenticate?(@user.username, params[:user][:old_password])
+        if params[:user][:new_password] == params[:user][:confirm_password]
+          @user.password = params[:user][:new_password]
+          @user.update_attributes(:password => @user.password,
+            :role => @user.role_name
+          )
+          flash[:notice] = "#{t('flash9')}"
+          redirect_to :action => 'dashboard'
+        else
+          flash[:warn_notice] = "<p>#{t('flash10')}</p>"
+        end
+      else
+        flash[:warn_notice] = "<p>#{t('flash11')}</p>"
+      end
     end
   end
 
@@ -135,13 +133,12 @@ class UserController < ApplicationController
       else
         if params[:user][:new_password] == params[:user][:confirm_password]
           @user.password = params[:user][:new_password]
-#          if @user.update_attributes(:password => @user.password,:role => @user.role_name)
-#            flash[:notice]= "#{t('flash7')}"
-            flash[:notice] = "Password cannot be changed in demo version"
+          if @user.update_attributes(:password => @user.password,:role => @user.role_name)
+            flash[:notice]= "#{t('flash7')}"
             redirect_to :action=>"edit", :id=>@user.username
-#          else
-#            render :user_change_password
-#          end
+          else
+            render :user_change_password
+          end
         else
           flash[:warn_notice] =  "<p>#{t('flash10')}</p>"
         end
@@ -209,7 +206,7 @@ class UserController < ApplicationController
           user.reset_password_code = Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
           user.reset_password_code_until = 1.day.from_now
           user.role = user.role_name
-#          user.save(false)
+          user.save(false)
           url = "#{request.protocol}#{request.host_with_port}"
           UserNotifier.deliver_forgot_password(user,url)
           flash[:notice] = "#{t('flash18')}"
@@ -319,12 +316,11 @@ class UserController < ApplicationController
       if user
         if params[:set_new_password][:new_password] === params[:set_new_password][:confirm_password]
           user.password = params[:set_new_password][:new_password]
-#          user.update_attributes(:password => user.password, :reset_password_code => nil, :reset_password_code_until => nil, :role => user.role_name)
+          user.update_attributes(:password => user.password, :reset_password_code => nil, :reset_password_code_until => nil, :role => user.role_name)
           user.clear_menu_cache
           #User.update(user.id, :password => params[:set_new_password][:new_password],
           # :reset_password_code => nil, :reset_password_code_until => nil)
-#          flash[:notice] = "#{t('flash3')}"
-          flash[:notice] = "Password cannot be changed in demo version"
+          flash[:notice] = "#{t('flash3')}"
           redirect_to :action => 'index'
         else
           flash[:notice] = "#{t('user.flash4')}"

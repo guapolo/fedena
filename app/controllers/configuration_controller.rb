@@ -33,20 +33,19 @@ class ConfigurationController < ApplicationController
     @school_detail = SchoolDetail.first || SchoolDetail.new
     @countries=Country.all
     if request.post?
-#      Configuration.set_config_values(params[:configuration])
+      Configuration.set_config_values(params[:configuration])
       session[:language] = nil unless session[:language].nil?
       @school_detail.logo = params[:school_detail][:school_logo] if params[:school_detail].present?
-#      unless @school_detail.save
-#        @config = Configuration.get_multiple_configs_as_hash ['InstitutionName', 'InstitutionAddress', 'InstitutionPhoneNo', \
-#            'StudentAttendanceType', 'CurrencyType', 'ExamResultType', 'AdmissionNumberAutoIncrement','EmployeeNumberAutoIncrement', \
-#            'NetworkState','Locale','FinancialYearStartDate','FinancialYearEndDate','EnableNewsCommentModeration','DefaultCountry','TimeZone']
-#        return
-#      end
+      unless @school_detail.save
+        @config = Configuration.get_multiple_configs_as_hash ['InstitutionName', 'InstitutionAddress', 'InstitutionPhoneNo', \
+            'StudentAttendanceType', 'CurrencyType', 'ExamResultType', 'AdmissionNumberAutoIncrement','EmployeeNumberAutoIncrement', \
+            'NetworkState','Locale','FinancialYearStartDate','FinancialYearEndDate','EnableNewsCommentModeration','DefaultCountry','TimeZone']
+        return
+      end
       @current_user.clear_menu_cache
       Configuration.clear_school_cache(@current_user)
       News.new.reload_news_bar
-#      flash[:notice] = "#{t('flash_msg8')}"
-      flash[:notice] = "Settings cannot be changed in demo version"
+      flash[:notice] = "#{t('flash_msg8')}"
       redirect_to :action => "settings"  and return
     end
   end
